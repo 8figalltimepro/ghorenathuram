@@ -202,6 +202,7 @@ class MirrorListener:
                 msg += f'\n<b>Corrupted Files: </b>{typ}'
             msg += f'\n<b>cc: </b>{self.tag}\n\n'
             if not files:
+                bot.send_sticker(chat_id=update.message.chat_id, sticker='CAACAgIAAxkBAAEUwvNintIAAV7VKxBdKzmwkpgdjSPxFfkAAnIXAALQYvFIKvQVHCNEEmEkBA')
                 sendMessage(msg, self.bot, self.message)
             else:
                 fmsg = ''
