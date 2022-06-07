@@ -215,7 +215,6 @@ class MirrorListener:
                 if fmsg != '':
                     sendMessage(msg + fmsg, self.bot, self.message)
         else:
-            bot.message.reply_sticker(message.chat_id, sticker="CAACAgIAAxkBAAEUwvNintIAAV7VKxBdKzmwkpgdjSPxFfkAAnIXAALQYvFIKvQVHCNEEmEkBA")
             msg += f'\n\n<b>Type: </b>{typ}'
             if ospath.isdir(f'{DOWNLOAD_DIR}{self.uid}/{name}'):
                 msg += f'\n<b>SubFolders: </b>{folders}'
