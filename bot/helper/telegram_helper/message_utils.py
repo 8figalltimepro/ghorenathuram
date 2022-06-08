@@ -30,7 +30,7 @@ def sendSticker(fileid: str, bot, message: Message):
         LOGGER.warning(str(r))
         sleep(r.retry_after * 1.5)
         return sendMessage(text, bot, message)
-    except Exception as e:
+  except Exception as e:
         LOGGER.error(str(e))
         return
 
