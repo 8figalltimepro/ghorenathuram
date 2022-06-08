@@ -1,6 +1,6 @@
 from time import sleep
 from telegram import InlineKeyboardMarkup
-from telegram.message import Message
+from telegram.message import Message, Sticker
 from telegram.error import RetryAfter
 from pyrogram.errors import FloodWait
 
@@ -15,6 +15,18 @@ def sendMessage(text: str, bot, message: Message):
                             reply_to_message_id=message.message_id,
                             text=text, allow_sending_without_reply=True, parse_mode='HTMl', disable_web_page_preview=True)
     except RetryAfter as r:
+        LOGGER.warning(str(r))
+        sleep(r.retry_after * 1.5)
+        return sendMessage(text, bot, message)
+    except Exception as e:
+        LOGGER.error(str(e))
+        return
+      
+def sendSticker(fileid: str, bot, message: Message):
+  try:
+    return bot.sendSticker(message.chat_id,
+                         sticker=fileid)  
+  except RetryAfter as r:
         LOGGER.warning(str(r))
         sleep(r.retry_after * 1.5)
         return sendMessage(text, bot, message)
