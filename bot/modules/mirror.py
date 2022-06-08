@@ -244,9 +244,9 @@ class MirrorListener:
             if BUTTON_FIVE_NAME is not None and BUTTON_FIVE_URL is not None:
                 buttons.buildbutton(f"{BUTTON_FIVE_NAME}", f"{BUTTON_FIVE_URL}")
             if BUTTON_SIX_NAME is not None and BUTTON_SIX_URL is not None:
-                buttons.buildbutton(f"{BUTTON_SIX_NAME}", f"{BUTTON_SIX_URL}")
-            sendSticker('CAACAgUAAxkBAAETVydiZiwhH_fMn2x-CK8ZZSHklAREWQACHgAD9oK6D71hz3MWpjrmJAQ', self.bot, self.message)    
+                buttons.buildbutton(f"{BUTTON_SIX_NAME}", f"{BUTTON_SIX_URL}")    
             sendMarkup(msg, self.bot, self.message, InlineKeyboardMarkup(buttons.build_menu(2)))
+            sendSticker('CAACAgUAAxkBAAEU0cBioMc_nKKQ1k04twfinf1-s5jiTgACSAADqZrmFkHDwtQUlLd2JAQ', self.bot, self.message)
             if self.isQbit and QB_SEED and not self.extract:
                 if self.isZip:
                     try:
