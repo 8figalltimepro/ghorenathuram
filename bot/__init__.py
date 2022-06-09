@@ -385,6 +385,11 @@ try:
 except:
     AS_DOCUMENT = False
 try:
+    GOFILE = getConfig('GOFILE')
+    GOFILE = GOFILE.lower() == 'true'
+except:
+    GOFILE = False    
+try:
     EQUAL_SPLITS = getConfig('EQUAL_SPLITS')
     EQUAL_SPLITS = EQUAL_SPLITS.lower() == 'true'
 except:
