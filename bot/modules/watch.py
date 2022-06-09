@@ -87,7 +87,7 @@ def _watch(bot, message, isZip=False, isLeech=False, multi=0):
         msg = str(e).replace('<', ' ').replace('>', ' ')
         return sendMessage(tag + " " + msg, bot, message)
     if 'entries' in result:
-        continue
+        return sendMessage("Youtube Start", bot, message)
     else:
         formats = result.get('formats')
         formats_dict = {}
