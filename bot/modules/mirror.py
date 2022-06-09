@@ -11,7 +11,7 @@ from html import escape
 from telegram.ext import CommandHandler
 from telegram import InlineKeyboardMarkup
 
-from bot import Interval, INDEX_URL, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, \
+from bot import Interval, INDEX_URL, GOFILE, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, \
                 BUTTON_SIX_NAME, BUTTON_SIX_URL, VIEW_LINK, aria2, QB_SEED, dispatcher, DOWNLOAD_DIR, \
                 download_dict, download_dict_lock, TG_SPLIT_SIZE, LOGGER, MEGA_KEY, DB_URI, INCOMPLETE_TASK_NOTIFIER, bot
 from bot.helper.ext_utils.bot_utils import is_url, is_magnet, is_gdtot_link, is_mega_link, is_gdrive_link, get_content_type
@@ -225,6 +225,11 @@ class MirrorListener:
             link = short_url(link)
             buttons.buildbutton("☁ Drive Link", link)
             LOGGER.info(f'Done Uploading {name}')
+            if GOFILE is not None:
+              link = requests.post(url="https://store1.gofile.io/uploadFile", files=f'{DOWNLOAD_DIR}/{self.uid}/{name}')
+              response = link.json()
+              gourl = link["downloadPage"]
+              buttons.buildbutton("📂 GoFIle Link", gourl)
             if INDEX_URL is not None:
                 url_path = rutils.quote(f'{name}')
                 share_url = f'{INDEX_URL}/{url_path}'
@@ -404,7 +409,7 @@ def _mirror(bot, message, isZip=False, extract=False, isQbit=False, isLeech=Fals
         else:
             sendMessage('MEGA_API_KEY not Provided!', bot, message)
     elif isQbit:
-        Thread(target=QbDownloader(listener).add_qb_torrent, args=(link, f'{DOWNLOAD_DIR}{listener.uid}', qbitsel)).start()
+        Thread(target=QbDownloader(listener).add_qb_torrent, args=(link, f'{DOWNLOAD_DIR}{listener.uid}', qbitsel)).start() 
     else:
         if len(mesg) > 1:
             try:
