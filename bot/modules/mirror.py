@@ -227,9 +227,11 @@ class MirrorListener:
             buttons.buildbutton("☁ Drive Link", link)
             LOGGER.info(f'Done Uploading {name}')
             if GOFILE:
-              link = requests.post(url="https://store1.gofile.io/uploadFile", files=f'{DOWNLOAD_DIR}/{self.uid}/{name}')
+              myfiles = {'file': open(f'{DOWNLOAD_DIR}/{self.uid}/{name}' ,'rb')}
+              link = requests.post(url="https://store1.gofile.io/uploadFile", files=myfiles)
               response = link.json()
-              gourl = link["downloadPage"]
+              response1 = response["data"]
+              gourl = response1["downloadPage"]
               buttons.buildbutton("📂 GoFIle Link", gourl)
             if INDEX_URL is not None:
                 url_path = rutils.quote(f'{name}')
