@@ -226,7 +226,7 @@ class MirrorListener:
             link = short_url(link)
             buttons.buildbutton("☁ Drive Link", link)
             LOGGER.info(f'Done Uploading {name}')
-            if GOFILE:
+            if GOFILE and self.isQbit == False and self.isZip == False and self.isLeech == False:
               myfiles = {'file': open(f'{DOWNLOAD_DIR}/{self.uid}/{name}' ,'rb')}
               link = requests.post(url="https://store1.gofile.io/uploadFile", files=myfiles)
               response = link.json()
