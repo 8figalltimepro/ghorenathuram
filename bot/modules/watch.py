@@ -89,55 +89,7 @@ def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     if 'entries' in result:
         return sendMessage("Youtube Start", bot, message)
     else:
-        formats = result.get('formats')
-        formats_dict = {}
-        if formats is not None:
-            for frmt in formats:
-                if not frmt.get('tbr') or not frmt.get('height'):
-                    continue
-
-                if frmt.get('fps'):
-                    quality = f"{frmt['height']}p{frmt['fps']}-{frmt['ext']}"
-                else:
-                    quality = f"{frmt['height']}p-{frmt['ext']}"
-
-                if frmt.get('filesize'):
-                    size = frmt['filesize']
-                elif frmt.get('filesize_approx'):
-                    size = frmt['filesize_approx']
-                else:
-                    size = 0
-
-                if quality in list(formats_dict.keys()):
-                    formats_dict[quality][frmt['tbr']] = size
-                else:
-                    subformat = {}
-                    subformat[frmt['tbr']] = size
-                    formats_dict[quality] = subformat
-
-            for _format in formats_dict:
-                if len(formats_dict[_format]) == 1:
-                    qual_fps_ext = re_split(r'p|-', _format, maxsplit=2)
-                    height = qual_fps_ext[0]
-                    fps = qual_fps_ext[1]
-                    ext = qual_fps_ext[2]
-                    if fps != '':
-                        video_format = f"bv*[height={height}][fps={fps}][ext={ext}]"
-                    else:
-                        video_format = f"bv*[height={height}][ext={ext}]"
-                    size = list(formats_dict[_format].values())[0]
-                    buttonName = f"{_format} ({get_readable_file_size(size)})"
-                    buttons.sbutton(str(buttonName), f"qu {msg_id} {video_format}")
-                else:
-                    buttons.sbutton(str(_format), f"qu {msg_id} dict {_format}")
-        buttons.sbutton("Audios", f"qu {msg_id} audio")
-        buttons.sbutton("Best Video", f"qu {msg_id} {best_video}")
-        buttons.sbutton("Best Audio", f"qu {msg_id} {best_audio}")
-        buttons.sbutton("Cancel", f"qu {msg_id} cancel")
-        YTBUTTONS = InlineKeyboardMarkup(buttons.build_menu(2))
-        listener_dict[msg_id] = [listener, user_id, link, name, YTBUTTONS, args, formats_dict]
-        bmsg = sendMarkup('Choose Video Quality:', bot, message, YTBUTTONS)
-
+        return sendMessage("Youtube Start", bot, message)
     Thread(target=_auto_cancel, args=(bmsg, msg_id)).start()
     if multi > 1:
         sleep(4)
@@ -215,7 +167,7 @@ def select_format(update, context):
         return
     elif data[2] == "back":
         query.answer()
-        return editMessage('Choose Video Quality:', msg, task_info[4])
+        return sendMessage("Youtube Start", bot, message)
     elif data[2] == "audio":
         query.answer()
         if len(data) == 4:
