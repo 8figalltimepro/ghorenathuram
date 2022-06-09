@@ -220,7 +220,9 @@ def rss_monitor(context):
                     url = rss_d.entries[feed_count]['links'][1]['href']
                 except IndexError:
                     url = rss_d.entries[feed_count]['link']
-                if RSS_COMMAND is not None:
+                if RSS_COMMAND is not None and url.lower().__contains__("youtube"):
+                    feed_msg = f"/watch {url}"    
+                elif RSS_COMMAND is not None:
                     feed_msg = f"{RSS_COMMAND} {url}"
                 else:
                     feed_msg = f"<b>Name: </b><code>{rss_d.entries[feed_count]['title'].replace('>', '').replace('<', '')}</code>\n\n"
