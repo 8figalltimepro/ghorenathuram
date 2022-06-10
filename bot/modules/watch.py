@@ -14,11 +14,24 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from .mirror import MirrorListener
 
 listener_dict = {}
+def select_format(update, context):
+    query = update.callback_query
+    user_id = query.from_user.id
+    data = query.data
+    msg = query.message
+    data = data.split(" ")
+    task_id = int(data[1])
+    try:
+        task_info = listener_dict[task_id]
+    except:
+        return editMessage("This is an old task", msg)
+    uid = task_info[1]
 
 def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     mssg = message.text
     user_id = message.from_user.id
     msg_id = message.message_id
+    
 
     try:
         link = mssg.split(' ')[1].strip()
@@ -131,8 +144,9 @@ leech_watch_handler = CommandHandler(BotCommands.LeechWatchCommand, leechWatch,
                                 filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
 leech_zip_watch_handler = CommandHandler(BotCommands.LeechZipWatchCommand, leechWatchZip,
                                     filters=CustomFilters.authorized_chat | CustomFilters.authorized_user, run_async=True)
-
+quality_handler = CallbackQueryHandler(select_format, pattern="qu", run_async=True)
 dispatcher.add_handler(watch_handler)
 dispatcher.add_handler(zip_watch_handler)
 dispatcher.add_handler(leech_watch_handler)
 dispatcher.add_handler(leech_zip_watch_handler)
+dispatcher.add_handler(quality_handler)
