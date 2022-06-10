@@ -221,7 +221,7 @@ def rss_monitor(context):
                 except IndexError:
                     url = rss_d.entries[feed_count]['link']
                 if RSS_COMMAND is not None and url.lower().__contains__("youtube"):
-                    feed_msg = f"/watch {url}"    
+                    feed_msg = f"/leechwatch {url}"    
                 elif RSS_COMMAND is not None:
                     feed_msg = f"{RSS_COMMAND} {url}"
                 else:
