@@ -83,6 +83,7 @@ def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     ydl = YoutubeDLHelper(listener)
     try:
         result = ydl.extractMetaData(link, name, args, True)
+        Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()
     except Exception as e:
         msg = str(e).replace('<', ' ').replace('>', ' ')
         return sendMessage(tag + " " + msg, bot, message)
@@ -101,23 +102,6 @@ def _audio_subbuttons(task_id, msg, playlist=False):
     buttons.sbutton("Cancel", f"qu {task_id} cancel")
     SUBBUTTONS = InlineKeyboardMarkup(buttons.build_menu(2))
     editMessage(f"Choose Audio{i} Bitrate:", msg, SUBBUTTONS)
-
-def select_format(update, context):
-    query = update.callback_query
-    user_id = query.from_user.id
-    data = query.data
-    msg = query.message
-    data = data.split(" ")
-    task_id = int(data[1])
-    try:
-        task_info = listener_dict[task_id]
-    except:
-        return editMessage("This is an old task", msg)
-    uid = task_info[1]
-    
-    Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()
-    del listener_dict[task_id]
-
 def _auto_cancel(msg, msg_id):
     sleep(120)
     try:
