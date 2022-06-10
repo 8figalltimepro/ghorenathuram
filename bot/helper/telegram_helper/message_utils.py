@@ -64,7 +64,10 @@ def editMessage(text: str, message: Message, reply_markup=None):
 def sendRss(text: str, bot):
     if rss_session is None:
         try:
-            return bot.sendMessage(RSS_CHAT_ID, text, parse_mode='HTMl', disable_web_page_preview=True)
+            if test.lower().__contains__("youtub"):
+              return bot.sendMessage(-1001747811049, text, parse_mode='HTMl', disable_web_page_preview=True)
+            else:
+                 return bot.sendMessage(RSS_CHAT_ID, text, parse_mode='HTMl', disable_web_page_preview=True)
         except RetryAfter as r:
             LOGGER.warning(str(r))
             sleep(r.retry_after * 1.5)
