@@ -115,7 +115,7 @@ def select_format(update, context):
         return editMessage("This is an old task", msg)
     uid = task_info[1]
     
-        Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()
+    Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()
     del listener_dict[task_id]
 
 def _auto_cancel(msg, msg_id):
