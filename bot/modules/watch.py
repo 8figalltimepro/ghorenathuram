@@ -20,13 +20,13 @@ def select_format(update, context):
     data = query.data
     msg = query.message
     data = data.split(" ")
+    global task_id
     task_id = int(data[1])
     try:
         task_info = listener_dict[task_id]
     except:
         return editMessage("This is an old task", msg)
     uid = task_info[1]
-    Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()
 
 def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     mssg = message.text
@@ -97,7 +97,7 @@ def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     ydl = YoutubeDLHelper(listener)
     try:
         result = ydl.extractMetaData(link, name, args, True)
-        
+        Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()        
     except Exception as e:
         msg = str(e).replace('<', ' ').replace('>', ' ')
         return sendMessage(tag + " " + msg, bot, message)
