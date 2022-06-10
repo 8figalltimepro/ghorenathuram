@@ -14,19 +14,6 @@ from bot.helper.telegram_helper.filters import CustomFilters
 from .mirror import MirrorListener
 
 listener_dict = {}
-def select_format(update, context):
-    query = update.callback_query
-    user_id = query.from_user.id
-    data = query.data
-    msg = query.message
-    data = data.split(" ")
-    global task_id
-    task_id = int(data[1])
-    try:
-        task_info = listener_dict[task_id]
-    except:
-        return editMessage("This is an old task", msg)
-    uid = task_info[1]
 
 def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     mssg = message.text
@@ -95,6 +82,7 @@ def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     best_video = "bv*+ba/b"
     best_audio = "ba/b"
     ydl = YoutubeDLHelper(listener)
+    task_id = msg_id
     try:
         result = ydl.extractMetaData(link, name, args, True)
         Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()        
