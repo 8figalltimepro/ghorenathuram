@@ -26,6 +26,7 @@ def select_format(update, context):
     except:
         return editMessage("This is an old task", msg)
     uid = task_info[1]
+    Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()
 
 def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     mssg = message.text
@@ -96,8 +97,7 @@ def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     ydl = YoutubeDLHelper(listener)
     try:
         result = ydl.extractMetaData(link, name, args, True)
-        task_id = int(780)
-        Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()
+        
     except Exception as e:
         msg = str(e).replace('<', ' ').replace('>', ' ')
         return sendMessage(tag + " " + msg, bot, message)
