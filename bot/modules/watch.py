@@ -86,109 +86,6 @@ def _watch(bot, message, isZip=False, isLeech=False, multi=0):
     except Exception as e:
         msg = str(e).replace('<', ' ').replace('>', ' ')
         return sendMessage(tag + " " + msg, bot, message)
-    if 'entries' in result:
-        for i in ['144', '240', '360', '480', '720', '1080', '1440', '2160']:
-            video_format = f"bv*[height<={i}][ext=mp4]"
-            buttons.sbutton(f"{i}-mp4", f"qu {msg_id} {video_format} t")
-            video_format = f"bv*[height<={i}][ext=webm]"
-            buttons.sbutton(f"{i}-webm", f"qu {msg_id} {video_format} t")
-        buttons.sbutton("Audios", f"qu {msg_id} audio t")
-        buttons.sbutton("Best Videos", f"qu {msg_id} {best_video} t")
-        buttons.sbutton("Best Audios", f"qu {msg_id} {best_audio} t")
-        buttons.sbutton("Cancel", f"qu {msg_id} cancel")
-        YTBUTTONS = InlineKeyboardMarkup(buttons.build_menu(3))
-        listener_dict[msg_id] = [listener, user_id, link, name, YTBUTTONS, args]
-        bmsg = sendMarkup('Choose Playlist Videos Quality:', bot, message, YTBUTTONS)
-    else:
-        formats = result.get('formats')
-        formats_dict = {}
-        if formats is not None:
-            for frmt in formats:
-                if not frmt.get('tbr') or not frmt.get('height'):
-                    continue
-
-                if frmt.get('fps'):
-                    quality = f"{frmt['height']}p{frmt['fps']}-{frmt['ext']}"
-                else:
-                    quality = f"{frmt['height']}p-{frmt['ext']}"
-
-                if frmt.get('filesize'):
-                    size = frmt['filesize']
-                elif frmt.get('filesize_approx'):
-                    size = frmt['filesize_approx']
-                else:
-                    size = 0
-
-                if quality in list(formats_dict.keys()):
-                    formats_dict[quality][frmt['tbr']] = size
-                else:
-                    subformat = {}
-                    subformat[frmt['tbr']] = size
-                    formats_dict[quality] = subformat
-
-            for _format in formats_dict:
-                if len(formats_dict[_format]) == 1:
-                    qual_fps_ext = re_split(r'p|-', _format, maxsplit=2)
-                    height = qual_fps_ext[0]
-                    fps = qual_fps_ext[1]
-                    ext = qual_fps_ext[2]
-                    if fps != '':
-                        video_format = f"bv*[height={height}][fps={fps}][ext={ext}]"
-                    else:
-                        video_format = f"bv*[height={height}][ext={ext}]"
-                    size = list(formats_dict[_format].values())[0]
-                    buttonName = f"{_format} ({get_readable_file_size(size)})"
-                    buttons.sbutton(str(buttonName), f"qu {msg_id} {video_format}")
-                else:
-                    buttons.sbutton(str(_format), f"qu {msg_id} dict {_format}")
-        buttons.sbutton("Audios", f"qu {msg_id} audio")
-        buttons.sbutton("Best Video", f"qu {msg_id} {best_video}")
-        buttons.sbutton("Best Audio", f"qu {msg_id} {best_audio}")
-        buttons.sbutton("Cancel", f"qu {msg_id} cancel")
-        YTBUTTONS = InlineKeyboardMarkup(buttons.build_menu(2))
-        listener_dict[msg_id] = [listener, user_id, link, name, YTBUTTONS, args, formats_dict]
-        bmsg = sendMarkup('Choose Video Quality:', bot, message, YTBUTTONS)
-
-    Thread(target=_auto_cancel, args=(bmsg, msg_id)).start()
-    if multi > 1:
-        sleep(4)
-        nextmsg = type('nextmsg', (object, ), {'chat_id': message.chat_id, 'message_id': message.reply_to_message.message_id + 1})
-        nextmsg = sendMessage(mssg.split(' ')[0], bot, nextmsg)
-        nextmsg.from_user.id = message.from_user.id
-        multi -= 1
-        sleep(4)
-        Thread(target=_watch, args=(bot, nextmsg, isZip, isLeech, multi)).start()
-
-def _qual_subbuttons(task_id, qual, msg):
-    buttons = button_build.ButtonMaker()
-    task_info = listener_dict[task_id]
-    formats_dict = task_info[6]
-    qual_fps_ext = re_split(r'p|-', qual, maxsplit=2)
-    height = qual_fps_ext[0]
-    fps = qual_fps_ext[1]
-    ext = qual_fps_ext[2]
-    tbrs = []
-    for tbr in formats_dict[qual]:
-        tbrs.append(tbr)
-    tbrs.sort(reverse=True)
-    for index, br in enumerate(tbrs):
-        if index == 0:
-            tbr = f">{br}"
-        else:
-            sbr = index - 1
-            tbr = f"<{tbrs[sbr]}"
-        if fps != '':
-            video_format = f"bv*[height={height}][fps={fps}][ext={ext}][tbr{tbr}]"
-        else:
-            video_format = f"bv*[height={height}][ext={ext}][tbr{tbr}]"
-        size = formats_dict[qual][br]
-        buttonName = f"{br}K ({get_readable_file_size(size)})"
-        buttons.sbutton(str(buttonName), f"qu {task_id} {video_format}")
-    buttons.sbutton("Back", f"qu {task_id} back")
-    buttons.sbutton("Cancel", f"qu {task_id} cancel")
-    SUBBUTTONS = InlineKeyboardMarkup(buttons.build_menu(2))
-    editMessage(f"Choose Video Bitrate for <b>{qual}</b>:", msg, SUBBUTTONS)
-
 def _audio_subbuttons(task_id, msg, playlist=False):
     buttons = button_build.ButtonMaker()
     audio_qualities = [64, 128, 320]
@@ -217,44 +114,8 @@ def select_format(update, context):
     except:
         return editMessage("This is an old task", msg)
     uid = task_info[1]
-    if user_id != uid and not CustomFilters._owner_query(user_id):
-        return query.answer(text="This task is not for you!", show_alert=True)
-    elif data[2] == "dict":
-        query.answer()
-        qual = data[3]
-        _qual_subbuttons(task_id, qual, msg)
-        return
-    elif data[2] == "back":
-        query.answer()
-        return editMessage('Choose Video Quality:', msg, task_info[4])
-    elif data[2] == "audio":
-        query.answer()
-        if len(data) == 4:
-            playlist = True
-        else:
-            playlist = False
-        _audio_subbuttons(task_id, msg, playlist)
-        return
-    elif data[2] == "cancel":
-        query.answer()
-        editMessage('Task has been cancelled.', msg)
-    else:
-        query.answer()
-        listener = task_info[0]
-        link = task_info[2]
-        name = task_info[3]
-        args = task_info[5]
-        qual = data[2]
-        if qual.startswith('bv*['): # To not exceed telegram button bytes limits. Temp solution.
-            height = re_split(r'\[|\]', qual, maxsplit=2)[1]
-            qual = qual + f"+ba/b[{height}]"
-        if len(data) == 4:
-            playlist = True
-        else:
-            playlist = False
-        ydl = YoutubeDLHelper(listener)
-        Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, qual, playlist, args)).start()
-        query.message.delete()
+    
+        Thread(target=ydl.add_download, args=(link, f'{DOWNLOAD_DIR}{task_id}', name, best_video, False, args)).start()
     del listener_dict[task_id]
 
 def _auto_cancel(msg, msg_id):
