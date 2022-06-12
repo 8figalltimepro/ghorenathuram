@@ -231,9 +231,9 @@ class MirrorListener:
               sleep(11)
               f = open(f'{DOWNLOAD_DIR}{self.uid}/{name}', "rb")
               chunk = f.read(CHUNK_SIZE)
-                while chunk:
-                  linkgo = requests.post(url="https://store1.gofile.io/uploadFile", files=chunk)
-                  sleep(5)
+              while chunk:
+                linkgo = requests.post(url="https://store1.gofile.io/uploadFile", files=chunk)
+                sleep(5)
               response = linkgo.json()
               response1 = response["data"]
               gourl = response1["downloadPage"]
