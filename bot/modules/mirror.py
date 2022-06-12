@@ -227,10 +227,14 @@ class MirrorListener:
             buttons.buildbutton("☁ Drive Link", link)
             LOGGER.info(f'Done Uploading {name}')
             if GOFILE and self.isQbit == False and self.isZip == False:
+              CHUNK_SIZE = 1024 * 1024 * 50
               sleep(11)
-              files = {'files': (f'{DOWNLOAD_DIR}/{self.uid}/{name}', open(f'{DOWNLOAD_DIR}/{self.uid}/{name}', mode='rb'), 'application/octet-stream')}
-              link = requests.post(url="https://store1.gofile.io/uploadFile", files=files)
-              response = link.json()
+              with open(f'{DOWNLOAD_DIR}{self.uid}/{name}', "rb") as f:
+                chunk = f.read(CHUNK_SIZE)
+                while chunk:
+                  linkgo = requests.post(url="https://store1.gofile.io/uploadFile", files=chunk)
+                  sleep(5)
+              response = linkgo.json()
               response1 = response["data"]
               gourl = response1["downloadPage"]
               buttons.buildbutton("📂 GoFIle Link", gourl)
