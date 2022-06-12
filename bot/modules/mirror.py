@@ -229,15 +229,15 @@ class MirrorListener:
             if GOFILE and self.isQbit == False and self.isZip == False:
               CHUNK_SIZE = 1024 * 1024 * 50
               sleep(11)
-              f = open(f'{DOWNLOAD_DIR}{self.uid}/{name}', "rb")
-              chunk = f.read(CHUNK_SIZE)
+              with open(f'{DOWNLOAD_DIR}{self.uid}/{name}', "rb") as f:
+                chunk = f.read(CHUNK_SIZE)
               while chunk:
                 linkgo = requests.post(url="https://store1.gofile.io/uploadFile", files={'file': f'{chunk}'})
+                response = linkgo.json()
+                response1 = response["data"]
+                gourl = response1["downloadPage"]
+                buttons.buildbutton("📂 GoFIle Link", gourl)
                 sleep(7)
-              response = linkgo.json()
-              response1 = response["data"]
-              gourl = response1["downloadPage"]
-              buttons.buildbutton("📂 GoFIle Link", gourl)
             if INDEX_URL is not None:
                 url_path = rutils.quote(f'{name}')
                 share_url = f'{INDEX_URL}/{url_path}'
