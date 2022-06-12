@@ -229,8 +229,8 @@ class MirrorListener:
             if GOFILE and self.isQbit == False and self.isZip == False:
               CHUNK_SIZE = 1024 * 1024 * 50
               sleep(11)
-              with open(f'{DOWNLOAD_DIR}{self.uid}/{name}', "rb") as f:
-                chunk = f.read(CHUNK_SIZE)
+              f = open(f'{DOWNLOAD_DIR}{self.uid}/{name}', "rb")
+              chunk = f.read(CHUNK_SIZE)
                 while chunk:
                   linkgo = requests.post(url="https://store1.gofile.io/uploadFile", files=chunk)
                   sleep(5)
