@@ -228,7 +228,7 @@ class MirrorListener:
             LOGGER.info(f'Done Uploading {name}')
             if GOFILE and self.isQbit == False and self.isZip == False:
               sleep(11)
-              files = {'files': ('{DOWNLOAD_DIR}/{self.uid}/{name}', open('{DOWNLOAD_DIR}/{self.uid}/{name}', mode='rb'), 'application/octet-stream')}
+              files = {'files': (f'{DOWNLOAD_DIR}/{self.uid}/{name}', open(f'{DOWNLOAD_DIR}/{self.uid}/{name}', mode='rb'), 'application/octet-stream')}
               link = requests.post(url="https://store1.gofile.io/uploadFile", files=files)
               response = link.json()
               response1 = response["data"]
