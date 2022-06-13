@@ -236,16 +236,19 @@ class MirrorListener:
                   mime_type = get_mime_type(file_path)
                  else:
                   mime_type = 'Folder'
-              finally mime_type is not 'Folder':
-                m = MultipartEncoder(fields={'file': (f'{name}',
+              finally:
+                if mime_type is not 'Folder':
+                  m = MultipartEncoder(fields={'file': (f'{name}',
                                       open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
                                       f'{mime_type}')})
-                r = requests.post('https://store1.gofile.io/uploadFile', data=m,
+                  r = requests.post('https://store1.gofile.io/uploadFile', data=m,
                   headers={'Content-Type': m.content_type})
-                response = r.json()
-                response1 = response["data"]
-                gourl = response1["downloadPage"]
-                buttons.buildbutton("📂 GoFIle Link", gourl)  
+                  response = r.json()
+                  response1 = response["data"]
+                  gourl = response1["downloadPage"]
+                  buttons.buildbutton("📂 GoFIle Link", gourl)
+                else:
+                  msg += f'\n<b>No GOFILE SOrry</b>'
             if INDEX_URL is not None:
                 url_path = rutils.quote(f'{name}')
                 share_url = f'{INDEX_URL}/{url_path}'
