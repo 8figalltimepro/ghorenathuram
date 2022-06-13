@@ -11,12 +11,14 @@ from html import escape
 from telegram.ext import CommandHandler
 from telegram import InlineKeyboardMarkup
 import requests
+from requests_toolbelt import MultipartEncoder
 
 from bot import Interval, INDEX_URL, GOFILE, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, \
                 BUTTON_SIX_NAME, BUTTON_SIX_URL, VIEW_LINK, aria2, QB_SEED, dispatcher, DOWNLOAD_DIR, \
                 download_dict, download_dict_lock, TG_SPLIT_SIZE, LOGGER, MEGA_KEY, DB_URI, INCOMPLETE_TASK_NOTIFIER, bot
 from bot.helper.ext_utils.bot_utils import is_url, is_magnet, is_gdtot_link, is_mega_link, is_gdrive_link, get_content_type
 from bot.helper.ext_utils.fs_utils import get_base_name, get_path_size, split_file, clean_download
+from bot.helper.ext_utils.fs_utils import get_mime_type, get_path_size
 from bot.helper.ext_utils.shortenurl import short_url
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException, NotSupportedExtractionArchive
 from bot.helper.mirror_utils.download_utils.aria2_download import add_aria2c_download
@@ -227,17 +229,23 @@ class MirrorListener:
             buttons.buildbutton("☁ Drive Link", link)
             LOGGER.info(f'Done Uploading {name}')
             if GOFILE and self.isQbit == False and self.isZip == False:
-              CHUNK_SIZE = 1024 * 1024 * 10
-              sleep(11)
-              with open(f'{DOWNLOAD_DIR}{self.uid}/{name}', "rb") as f:
-                chunk = f.read(CHUNK_SIZE)
-              while chunk:
-                linkgo = requests.post(url="https://store1.gofile.io/uploadFile", files={'file': f'{chunk}'})
-                sleep(4)
-              response = linkgo.json()
-              response1 = response["data"]
-              gourl = response1["downloadPage"]
-              buttons.buildbutton("📂 GoFIle Link", gourl)  
+              file_dir = f"{DOWNLOAD_DIR}{self.uid}"
+              file_path = f"{file_dir}/{name}"
+              try:
+                 if ospath.isfile(file_path):
+                  mime_type = get_mime_type(file_path)
+                 else:
+                  mime_type = 'Folder'
+              if mime_type is not 'Folder':
+                m = MultipartEncoder(fields={'file': (f'{name}',
+                                      open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
+                                      f'{mime_type}')})
+                r = requests.post('https://store1.gofile.io/uploadFile', data=m,
+                  headers={'Content-Type': m.content_type})
+                response = r.json()
+                response1 = response["data"]
+                gourl = response1["downloadPage"]
+                buttons.buildbutton("📂 GoFIle Link", gourl)  
             if INDEX_URL is not None:
                 url_path = rutils.quote(f'{name}')
                 share_url = f'{INDEX_URL}/{url_path}'
