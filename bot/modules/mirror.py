@@ -236,7 +236,7 @@ class MirrorListener:
                   mime_type = get_mime_type(file_path)
                  else:
                   mime_type = 'Folder'
-              if mime_type is not 'Folder':
+              finally mime_type is not 'Folder':
                 m = MultipartEncoder(fields={'file': (f'{name}',
                                       open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
                                       f'{mime_type}')})
