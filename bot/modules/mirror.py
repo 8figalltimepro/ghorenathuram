@@ -248,7 +248,7 @@ class MirrorListener:
                   gourl = response1["downloadPage"]
                   buttons.buildbutton("📂 GoFIle Link", gourl)
                 else:
-                  msg += f'\n<b>No GOFILE SOrry</b>'
+                  msg += f'\n<b>Folders are blocked for GOFILE</b>'
             if INDEX_URL is not None:
                 url_path = rutils.quote(f'{name}')
                 share_url = f'{INDEX_URL}/{url_path}'
