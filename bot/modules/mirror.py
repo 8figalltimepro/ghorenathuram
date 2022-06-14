@@ -228,7 +228,7 @@ class MirrorListener:
             link = short_url(link)
             buttons.buildbutton("☁ Drive Link", link)
             LOGGER.info(f'Done Uploading {name}')
-            if GOFILE and self.isQbit == False and self.isZip == False:
+            if GOFILE and not self.isLeech:
               file_dir = f"{DOWNLOAD_DIR}{self.uid}"
               file_path = f"{file_dir}/{name}"
               try:
