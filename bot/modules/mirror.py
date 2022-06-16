@@ -179,7 +179,7 @@ class MirrorListener:
               LOGGER.info(f'GoFile Folder has been created with id: {craetedfolderid}')
               uploadThis(rootdir, createdfolderid)
               LOGGER.info(f'GoFile Files have been uploaded')
-              gofilefoldercreatedfolderlink = f(https://gofile.io/d/{createdfoldercode})
+              gofilefoldercreatedfolderlink = (f'https://gofile.io/d/{createdfoldercode}')
             else:
               m = MultipartEncoder(fields={'file': (f'{name}',
                                    open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
