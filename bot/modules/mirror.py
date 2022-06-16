@@ -166,7 +166,7 @@ class MirrorListener:
               mime_type = get_mime_type(path)
              else:
               mime_type = 'Folder'
-          finally:
+         finally:
             if mime_type == 'Folder':
               rootdir = path
               rootdirname = os.path.basename(rootdir)
