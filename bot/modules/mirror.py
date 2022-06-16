@@ -12,7 +12,7 @@ from telegram.ext import CommandHandler
 from telegram import InlineKeyboardMarkup
 import requests
 from requests_toolbelt import MultipartEncoder
-from 
+import os
 
 from bot import Interval, INDEX_URL, GOFILE, GOFILETOKEN, GOFILEBASEFOLDER, BUTTON_FOUR_NAME, BUTTON_FOUR_URL, BUTTON_FIVE_NAME, BUTTON_FIVE_URL, \
                 BUTTON_SIX_NAME, BUTTON_SIX_URL, VIEW_LINK, aria2, QB_SEED, dispatcher, DOWNLOAD_DIR, \
