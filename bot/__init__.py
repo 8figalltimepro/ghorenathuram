@@ -420,6 +420,20 @@ try:
 except:
     GOFILE = False    
 try:
+    if GOFILE == 'true':    
+      GOFILETOKEN = getConfig('GOFILETOKEN')
+      GOFILETOKEN = GOFILE.lower() == 'true'
+except:
+    GOFILE = False
+    GOFILETOKEN = False
+try:
+    if GOFILE == 'true':
+      GOFILEBASEFOLDER = getConfig('GOFILEBASEFOLDERID')
+      GOFILE = GOFILE.lower() == 'true'
+except:
+    GOFILE = False 
+    
+try:
     EQUAL_SPLITS = getConfig('EQUAL_SPLITS')
     EQUAL_SPLITS = EQUAL_SPLITS.lower() == 'true'
 except:
