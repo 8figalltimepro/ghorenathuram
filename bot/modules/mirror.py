@@ -163,9 +163,9 @@ class MirrorListener:
          path = f'{DOWNLOAD_DIR}{self.uid}/{name}'
          try:
              if ospath.isfile(file_path):
-             mime_type = get_mime_type(path)
+              mime_type = get_mime_type(path)
              else:
-                mime_type = 'Folder'
+              mime_type = 'Folder'
              finally:
                   if mime_type == 'Folder':
                     rootdir = path
