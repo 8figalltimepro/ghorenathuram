@@ -429,7 +429,7 @@ except:
     GOFILETOKEN = False
     LOGGER.info('Gofile API key not provided!') 
 try:
-    if:
+    if GOFILE:
       GOFILEBASEFOLDER = getConfig('GOFILEBASEFOLDERID')
 except:
     GOFILE = False
