@@ -166,31 +166,31 @@ class MirrorListener:
               mime_type = get_mime_type(path)
              else:
               mime_type = 'Folder'
-             finally:
-                  if mime_type == 'Folder':
-                    rootdir = path
-                    rootdirname = os.path.basename(rootdir)
-                    token = GOFILETOKEN
-                    baseid = GOFILEBASEFOLDER
-                    m = {'folderName': rootdirname, 'token': token, 'parentFolderId': baseid}
-                    createdfolder = requests.put('https://api.gofile.io/createFolder', data=m).json()['data']
-                    createdfoldercode = createdfolder['code']
-                    createdfolderid = createdfolder['id']
-                    LOGGER.info(f'GoFile Folder has been created with id: {craetedfolderid}')
-                    uploadThis(rootdir, createdfolderid)
-                    LOGGER.info(f'GoFile Files have been uploaded')
-                    gofilefoldercreatedfolderlink = f(https://gofile.io/d/{createdfoldercode})
-                  else:
-                    m = MultipartEncoder(fields={'file': (f'{name}',
-                                        open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
-                                        f'{mime_type}')})
-                    r = requests.post('https://store1.gofile.io/uploadFile', data=m,
-                    headers={'Content-Type': m.content_type})
-                    response = r.json()
-                    response1 = response["data"]
-                    gourl = response1["downloadPage"]
-                    LOGGER.info(f'Gofile of file name: {name}')
-                    gofilefoldercreatedfolderlink = gourl           
+          finally:
+            if mime_type == 'Folder':
+              rootdir = path
+              rootdirname = os.path.basename(rootdir)
+              token = GOFILETOKEN
+              baseid = GOFILEBASEFOLDER
+              m = {'folderName': rootdirname, 'token': token, 'parentFolderId': baseid}
+              createdfolder = requests.put('https://api.gofile.io/createFolder', data=m).json()['data']
+              createdfoldercode = createdfolder['code']
+              createdfolderid = createdfolder['id']
+              LOGGER.info(f'GoFile Folder has been created with id: {craetedfolderid}')
+              uploadThis(rootdir, createdfolderid)
+              LOGGER.info(f'GoFile Files have been uploaded')
+              gofilefoldercreatedfolderlink = f(https://gofile.io/d/{createdfoldercode})
+            else:
+              m = MultipartEncoder(fields={'file': (f'{name}',
+                                   open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
+                                   f'{mime_type}')})
+              r = requests.post('https://store1.gofile.io/uploadFile', data=m,
+              headers={'Content-Type': m.content_type})
+              response = r.json()
+              response1 = response["data"]
+              gourl = response1["downloadPage"]
+              LOGGER.info(f'Gofile of file name: {name}')
+              gofilefoldercreatedfolderlink = gourl           
         if self.isLeech:
             size = get_path_size(f'{DOWNLOAD_DIR}{self.uid}')
             LOGGER.info(f"Leech Name: {up_name}")
