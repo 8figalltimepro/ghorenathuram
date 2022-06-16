@@ -412,30 +412,27 @@ except:
 try:
     AS_DOCUMENT = getConfig('AS_DOCUMENT')
     AS_DOCUMENT = AS_DOCUMENT.lower() == 'true'
-    LOGGER.info('GoFile feature Has been enabled!')
 except:
     AS_DOCUMENT = False
-    LOGGER.info('GoFile feature Has been disabled :(')
 try:
     GOFILE = getConfig('GOFILE')
     GOFILE = GOFILE.lower() == 'true'
+    LOGGER.info('GoFile feature Has been enabled!')
 except:
-    GOFILE = False    
+    GOFILE = False
+    LOGGER.info('GoFile feature Has been disabled!')
 try:
-    if GOFILE == 'true':    
+    if GOFILE:    
       GOFILETOKEN = getConfig('GOFILETOKEN')
-      GOFILETOKEN = GOFILE.lower() == 'true'
-      LOGGER.info('Gofile API key not provided!')
 except:
     GOFILE = False
     GOFILETOKEN = False
+    LOGGER.info('Gofile API key not provided!') 
 try:
-    if GOFILE == 'true':
+    if:
       GOFILEBASEFOLDER = getConfig('GOFILEBASEFOLDERID')
-      GOFILE = GOFILE.lower() == 'true'
 except:
-    GOFILE = False 
-    
+    GOFILE = False
 try:
     EQUAL_SPLITS = getConfig('EQUAL_SPLITS')
     EQUAL_SPLITS = EQUAL_SPLITS.lower() == 'true'
