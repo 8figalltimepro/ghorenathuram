@@ -174,7 +174,7 @@ class MirrorListener:
               createdfolder = requests.put('https://api.gofile.io/createFolder', data=m).json()['data']
               createdfoldercode = createdfolder['code']
               createdfolderid = createdfolder['id']
-              LOGGER.info(f'GoFile Folder has been created with id: {craetedfolderid}')
+              LOGGER.info(f'GoFile Folder has been created with id: {createdfolderid}')
               uploadThis(rootdir, createdfolderid)
               LOGGER.info(f'GoFile Files have been uploaded')
               gofilefoldercreatedfolderlink = (f'https://gofile.io/d/{createdfoldercode}')
