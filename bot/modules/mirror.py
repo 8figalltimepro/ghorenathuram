@@ -161,7 +161,7 @@ class MirrorListener:
         if GOFILE and not self.isLeech:         
          global gofilefoldercreatedfolderlink
          path = f'{DOWNLOAD_DIR}{self.uid}/{name}'
-         if ospath.isfile(file_path):
+         if ospath.isfile(path):
           mime_type = get_mime_type(path)
          else:
           mime_type = 'Folder'
