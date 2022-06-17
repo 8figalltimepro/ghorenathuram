@@ -161,13 +161,11 @@ class MirrorListener:
         if GOFILE and not self.isLeech:         
          global gofilefoldercreatedfolderlink
          path = f'{DOWNLOAD_DIR}{self.uid}/{name}'
-         try:
-             if ospath.isfile(file_path):
-              mime_type = get_mime_type(path)
-             else:
-              mime_type = 'Folder'
-         finally:
-            if mime_type == 'Folder':
+         if ospath.isfile(file_path):
+          mime_type = get_mime_type(path)
+         else:
+          mime_type = 'Folder'
+         if mime_type == 'Folder':
               rootdir = path
               rootdirname = os.path.basename(rootdir)
               token = GOFILETOKEN
@@ -180,7 +178,7 @@ class MirrorListener:
               uploadThis(rootdir, createdfolderid)
               LOGGER.info(f'GoFile Files have been uploaded')
               gofilefoldercreatedfolderlink = (f'https://gofile.io/d/{createdfoldercode}')
-            else:
+          else:
               m = MultipartEncoder(fields={'file': (f'{name}',
                                    open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
                                    f'{mime_type}')})
