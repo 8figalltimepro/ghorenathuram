@@ -157,39 +157,7 @@ class MirrorListener:
                                 download_dict[self.uid] = SplitStatus(up_name, up_path, size)
                             LOGGER.info(f"Splitting: {up_name}")
                         split_file(f_path, f_size, file_, dirpath, TG_SPLIT_SIZE)
-                        osremove(f_path)
-        if GOFILE and not self.isLeech:
-         x = os.listdir(f'{DOWNLOAD_DIR}{self.uid}')[0]
-         global gofilefoldercreatedfolderlink
-         path = f'{DOWNLOAD_DIR}{self.uid}/{x}'
-         if ospath.isfile(path):
-          mime_type = get_mime_type(path)
-         else:
-          mime_type = 'Folder'
-         if mime_type == 'Folder':
-              rootdir = path
-              rootdirname = os.path.basename(rootdir)
-              token = GOFILETOKEN
-              baseid = GOFILEBASEFOLDER
-              m = {'folderName': rootdirname, 'token': token, 'parentFolderId': baseid}
-              createdfolder = requests.put('https://api.gofile.io/createFolder', data=m).json()['data']
-              createdfoldercode = createdfolder['code']
-              createdfolderid = createdfolder['id']
-              LOGGER.info(f'GoFile Folder has been created with id: {createdfolderid}')
-              uploadThis(rootdir, createdfolderid)
-              LOGGER.info(f'GoFile Files have been uploaded')
-              gofilefoldercreatedfolderlink = (f'https://gofile.io/d/{createdfoldercode}')
-         else:
-              m = MultipartEncoder(fields={'file': (f'{name}',
-                                   open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
-                                   f'{mime_type}')})
-              r = requests.post('https://store1.gofile.io/uploadFile', data=m,
-              headers={'Content-Type': m.content_type})
-              response = r.json()
-              response1 = response["data"]
-              gourl = response1["downloadPage"]
-              LOGGER.info(f'Gofile of file name: {name}')
-              gofilefoldercreatedfolderlink = gourl           
+                        osremove(f_path)       
         if self.isLeech:
             size = get_path_size(f'{DOWNLOAD_DIR}{self.uid}')
             LOGGER.info(f"Leech Name: {up_name}")
@@ -261,6 +229,36 @@ class MirrorListener:
             link = short_url(link)
             buttons.buildbutton("☁ Drive Link", link)
             LOGGER.info(f'Done Uploading {name}')
+            if GOFILE and not self.isLeech:
+               path = f'{DOWNLOAD_DIR}{self.uid}/{name}'
+               if ospath.isfile(path):
+                mime_type = get_mime_type(path)
+               else:
+                mime_type = 'Folder'
+               if mime_type == 'Folder':
+                    rootdir = path
+                    rootdirname = os.path.basename(rootdir)
+                    token = GOFILETOKEN
+                    baseid = GOFILEBASEFOLDER
+                    m = {'folderName': rootdirname, 'token': token, 'parentFolderId': baseid}
+                    createdfolder = requests.put('https://api.gofile.io/createFolder', data=m).json()['data']
+                    createdfoldercode = createdfolder['code']
+                    createdfolderid = createdfolder['id']
+                    LOGGER.info(f'GoFile Folder has been created with id: {createdfolderid}')
+                    uploadThis(rootdir, createdfolderid)
+                    LOGGER.info(f'GoFile Files have been uploaded')
+                    gofilefoldercreatedfolderlink = (f'https://gofile.io/d/{createdfoldercode}')
+               else:
+                    m = MultipartEncoder(fields={'file': (f'{name}',
+                                         open(f'{DOWNLOAD_DIR}{self.uid}/{name}', 'rb'),
+                                         f'{mime_type}')})
+                    r = requests.post('https://store1.gofile.io/uploadFile', data=m,
+                    headers={'Content-Type': m.content_type})
+                    response = r.json()
+                    response1 = response["data"]
+                    gourl = response1["downloadPage"]
+                    LOGGER.info(f'Gofile of file name: {name}')
+                    gofilefoldercreatedfolderlink = gourl
             if GOFILE:
               buttons.buildbutton("📂 Gofile Linl", gofilefoldercreatedfolderlink)
             if INDEX_URL is not None:
