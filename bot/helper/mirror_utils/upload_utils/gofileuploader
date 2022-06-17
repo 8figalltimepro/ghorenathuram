@@ -1,0 +1,22 @@
+import os
+import mimetypes
+import requests
+from requests_toolbelt import MultipartEncoder
+
+from bot import GOFILE, GOFILEBASEFOLDER, GOFILETOKEN
+
+token = GOFILETOKEN
+
+
+def gofileupload_(filepath, parentfolderid):
+    filename = os.path.basename(filepath)
+    mimetype = mimetypes.guess_type(filename)
+    m = MultipartEncoder(fields={'file': (filename, open(filepath, 'rb'), mimetype), 'token': token, 'folderId': parentfolderid})
+    x = requests.post('https://store1.gofile.io/uploadFile', data=m,
+                      headers={'Content-Type': m.content_type})
+    return
+
+def gofoldercreate_(foldername, parentfolderid):
+    m = {'folderName': foldername, 'token': token, 'parentFolderId': parentfolderid}
+    x = requests.put('https://api.gofile.io/createFolder', data=m).json()['data']
+    return x    
