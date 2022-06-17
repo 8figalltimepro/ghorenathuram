@@ -158,9 +158,10 @@ class MirrorListener:
                             LOGGER.info(f"Splitting: {up_name}")
                         split_file(f_path, f_size, file_, dirpath, TG_SPLIT_SIZE)
                         osremove(f_path)
-        if GOFILE and not self.isLeech:         
+        if GOFILE and not self.isLeech:
+         x = os.listdir(f'{DOWNLOAD_DIR}{self.uid}')[0]
          global gofilefoldercreatedfolderlink
-         path = f'{DOWNLOAD_DIR}{self.uid}/{name}'
+         path = f'{DOWNLOAD_DIR}{self.uid}/{x}'
          if ospath.isfile(path):
           mime_type = get_mime_type(path)
          else:
